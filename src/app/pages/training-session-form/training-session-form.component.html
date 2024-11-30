@@ -1,0 +1,95 @@
+<mat-card>
+    <mat-card-title>Registro de Entrenamiento</mat-card-title>
+    <mat-card-content>
+      <form [formGroup]="trainingForm" (ngSubmit)="onSubmit()">
+        <mat-form-field appearance="fill">
+          <mat-label>Fecha del entrenamiento</mat-label>
+          <input matInput type="date" formControlName="date">
+        </mat-form-field>
+  
+        <mat-form-field appearance="fill">
+          <mat-label>Distancia recorrida (km)</mat-label>
+          <input matInput type="number" formControlName="distance" step="0.1">
+        </mat-form-field>
+  
+        <mat-form-field appearance="fill">
+          <mat-label>Tiempo invertido (min)</mat-label>
+          <input matInput type="number" formControlName="time">
+        </mat-form-field>
+  
+        <mat-form-field appearance="fill">
+          <mat-label>Tipo de terreno</mat-label>
+          <mat-select formControlName="terrainType">
+            <mat-option value="Asfalto">Asfalto</mat-option>
+            <mat-option value="Montaña">Montaña</mat-option>
+            <mat-option value="Pista">Pista</mat-option>
+          </mat-select>
+        </mat-form-field>
+  
+        <button mat-raised-button color="primary" type="submit" [disabled]="trainingForm.invalid">Registrar</button>
+      </form>
+    </mat-card-content>
+  </mat-card>
+  
+  <mat-card>
+    <mat-card-title>Filtrar Entrenamientos</mat-card-title>
+    <mat-card-content>
+      <form [formGroup]="filterForm">
+        <mat-form-field appearance="fill">
+          <mat-label>Filtrar por tipo de terreno</mat-label>
+          <mat-select formControlName="terrainTypeFilter" (selectionChange)="onFilterChange()">
+            <mat-option value="">Todos</mat-option>
+            <mat-option value="Asfalto">Asfalto</mat-option>
+            <mat-option value="Montaña">Montaña</mat-option>
+            <mat-option value="Pista">Pista</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </form>
+  
+      <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+        <ng-container matColumnDef="date">
+          <th mat-header-cell *matHeaderCellDef> Fecha </th>
+          <td mat-cell *matCellDef="let session"> {{ session.date | date }} </td>
+        </ng-container>
+  
+        <ng-container matColumnDef="distance">
+          <th mat-header-cell *matHeaderCellDef> Distancia (km) </th>
+          <td mat-cell *matCellDef="let session"> {{ session.distance }} </td>
+        </ng-container>
+  
+        <ng-container matColumnDef="time">
+          <th mat-header-cell *matHeaderCellDef> Tiempo (min) </th>
+          <td mat-cell *matCellDef="let session"> {{ session.time }} </td>
+        </ng-container>
+  
+        <ng-container matColumnDef="averagePace">
+          <th mat-header-cell *matHeaderCellDef> Ritmo Promedio </th>
+          <td mat-cell *matCellDef="let session"> {{ session.averagePace }} </td>
+        </ng-container>
+  
+        <ng-container matColumnDef="terrainType">
+          <th mat-header-cell *matHeaderCellDef> Terreno </th>
+          <td mat-cell *matCellDef="let session"> {{ session.terrainType }} </td>
+        </ng-container>
+  
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+    </mat-card-content>
+  </mat-card>
+
+
+  <mat-card>
+    <mat-card-title>Estadísticas del Entrenamiento</mat-card-title>
+    <mat-card-content>
+      <div *ngIf="statistics">
+        <p><strong>Total de kilómetros recorridos:</strong> {{ statistics.totalDistance }} km</p>
+        <p><strong>Tiempo total invertido:</strong> {{ statistics.totalTime }} min</p>
+        <p><strong>Ritmo promedio:</strong> {{ statistics.averageSpeed }} km/min</p>
+      </div>
+      <div *ngIf="!statistics">
+        <p>No hay datos para mostrar estadísticas.</p>
+      </div>
+    </mat-card-content>
+  </mat-card>
+  
